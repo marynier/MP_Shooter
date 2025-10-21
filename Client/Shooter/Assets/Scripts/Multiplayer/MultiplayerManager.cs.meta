@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 5b17c44f7a944fd48b047ff862ac6bf2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _colyseusSettings: {fileID: 11400000, guid: e1fc8cf7333cf8b45a144aba548573af,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
