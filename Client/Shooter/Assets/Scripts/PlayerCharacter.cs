@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
+    [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private float _speed = 2f;
     private float _inputH;
     private float _inputV;
