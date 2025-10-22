@@ -12,14 +12,17 @@ public class PlayerCharacter : MonoBehaviour
         _inputH = h;
         _inputV = v;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }
     private void Move()
     {
-        Vector3 direction = new Vector3(_inputH, 0, _inputV).normalized;
-        transform.position += direction * Time.deltaTime * _speed;
+        //Vector3 direction = new Vector3(_inputH, 0, _inputV).normalized;
+        //transform.position += direction * Time.deltaTime * _speed;
+
+        Vector3 velocity = (transform.forward * _inputV + transform.right * _inputH).normalized * _speed;
+        _rigidbody.linearVelocity = velocity;
     }
     public void GetMoveInfo(out Vector3 position)
     {
