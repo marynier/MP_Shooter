@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiplayerManager
   _colyseusSettings: {fileID: 11400000, guid: e1fc8cf7333cf8b45a144aba548573af, type: 2}
-  _player: {fileID: 6700852268858993619, guid: 946900025848dd744bb6461230a682fa, type: 3}
+  _player: {fileID: 1541400838913244649, guid: 946900025848dd744bb6461230a682fa, type: 3}
   _enemy: {fileID: 8863855408586396398, guid: 369827a1b6b475648907875beb00502b, type: 3}
 --- !u!4 &366618439
 Transform:
@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 743949254}
   - component: {fileID: 743949253}
   - component: {fileID: 743949252}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
