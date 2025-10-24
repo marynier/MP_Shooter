@@ -68,6 +68,12 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     {
         _room.Send(key, data);
     }
+    public void SendMessage(string key, string data)
+    {
+        _room.Send(key, data);
+    }
+    public string GetSessionID() => _room.SessionId;
+    
 }
 
 //public class Room
