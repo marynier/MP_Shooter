@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -64,7 +64,7 @@ public class EnemyCharacter : Character
             { "id", _sessionID },
             {"value", damage }
         };
-        MultiplayerManager.Instance.SendMessage("damage", data);
+        MultiplayerManager.Instance.SendInfo("damage", data);
     }
     public void SetRotateX(float value)
     {

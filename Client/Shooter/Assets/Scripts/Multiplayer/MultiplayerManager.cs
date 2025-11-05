@@ -1,11 +1,13 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using Colyseus;
 using UnityEngine;
 
 
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
+    [field: SerializeField] public Skins _skins;
     [field: SerializeField] public LossCounter _lossCounter { get; private set; }
+    [field: SerializeField] public SpawnPoints _spawnPoints { get; private set; }
     [SerializeField] private PlayerCharacter _player;
     [SerializeField] private EnemyController _enemy;
 
@@ -18,15 +20,23 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         Connect();
     }
 
-    private async void Connect() //асинхронный метод, чтобы можно было дождаться пока что-то выполнится
+    private async void Connect() //Р°СЃРёРЅС…СЂРѕРЅРЅС‹Р№ РјРµС‚РѕРґ, С‡С‚РѕР±С‹ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РґРѕР¶РґР°С‚СЊСЃСЏ РїРѕРєР° С‡С‚Рѕ-С‚Рѕ РІС‹РїРѕР»РЅРёС‚СЃСЏ
     {
+        _spawnPoints.GetPoint(Random.Range(0, _spawnPoints.length), out Vector3 spawnPosition, out Vector3 spawnRotation);
+
         Dictionary<string, object> data = new Dictionary<string, object>()
         {
+            { "skins", _skins.length },
+            { "points", _spawnPoints.length },
             { "speed",  _player.speed },
-            { "hp",  _player.maxHealth }
+            { "hp",  _player.maxHealth },
+            {"pX", spawnPosition.x },
+            {"pY", spawnPosition.y },
+            {"pZ", spawnPosition.z },
+            {"rY", spawnRotation.y }
         };
 
-        _room = await Instance.client.JoinOrCreate<State>("state_handler", data); //await - дожидаемся пока произойдет присоединение к комнате сервера
+        _room = await Instance.client.JoinOrCreate<State>("state_handler", data); //await - РґРѕР¶РёРґР°РµРјСЃСЏ РїРѕРєР° РїСЂРѕРёР·РѕР№РґРµС‚ РїСЂРёСЃРѕРµРґРёРЅРµРЅРёРµ Рє РєРѕРјРЅР°С‚Рµ СЃРµСЂРІРµСЂР°
         _room.OnStateChange += OnChange;
 
         _room.OnMessage<string>("Shoot", ApplyShoot);
@@ -37,7 +47,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         ShootInfo shootInfo = JsonUtility.FromJson<ShootInfo>(jsonShootInfo);
         if (_enemies.ContainsKey(shootInfo.key) == false)
         {
-            Debug.LogError("Enemy нет, а он пытался стрелять");
+            Debug.LogError("Enemy РЅРµС‚, Р° РѕРЅ РїС‹С‚Р°Р»СЃСЏ СЃС‚СЂРµР»СЏС‚СЊ");
             return;
         }
         _enemies[shootInfo.key].Shoot(shootInfo);
@@ -64,16 +74,19 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     private void CreatePlayer(Player player)
     {
         var position = new Vector3(player.pX, player.pY, player.pZ); //W1L6
-        var playerCharacter = Instantiate(_player, position, Quaternion.identity);
+        Quaternion rotation = Quaternion.Euler(0, player.rY, 0);
+        var playerCharacter = Instantiate(_player, position, rotation);
         player.OnChange += playerCharacter.OnChange;
-        _room.OnMessage<string>("Restart", playerCharacter.GetComponent<Controller>().Restart);
+        _room.OnMessage<int>("Restart", playerCharacter.GetComponent<Controller>().Restart);
+        playerCharacter.GetComponent<SetSkin>().Set(_skins.GetMaterial(player.skin));
     }
-    
+
     private void CreateEnemy(string key, Player player)
     {
         var position = new Vector3(player.pX, player.pY, player.pZ); //W1L6
         var enemy = Instantiate(_enemy, position, Quaternion.identity);
         enemy.Init(key, player);
+        enemy.GetComponent<SetSkin>().Set(_skins.GetMaterial(player.skin));
 
         _enemies.Add(key, enemy);
     }
@@ -90,16 +103,16 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         base.OnDestroy();
         _room.Leave();
     }
-    public void SendMessage(string key, Dictionary<string, object> data)
+    public void SendInfo(string key, Dictionary<string, object> data)
     {
         _room.Send(key, data);
     }
-    public void SendMessage(string key, string data)
+    public void SendInfo(string key, string data)
     {
         _room.Send(key, data);
     }
     public string GetSessionID() => _room.SessionId;
-    
+
 }
 
 //public class Room

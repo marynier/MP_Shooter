@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using Colyseus.Schema;
 using UnityEngine;
 
@@ -95,7 +94,7 @@ public class PlayerCharacter : Character
                     _health.SetCurrent((sbyte)dataChange.Value);
                     break;
                 default:
-                    Debug.LogWarning("Не обрабатывается изменение поля " + dataChange.Field);
+                    Debug.LogWarning("РќРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ РёР·РјРµРЅРµРЅРёРµ РїРѕР»СЏ " + dataChange.Field);
                     break;
             }
         }
